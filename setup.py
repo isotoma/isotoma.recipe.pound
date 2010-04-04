@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.0.0'
+version = '0.0.8'
 
 setup(
     name = 'isotoma.recipe.pound',
@@ -8,6 +8,7 @@ setup(
     description = "Buildout recipes to configure the pound load balancer",
     long_description = open("README.rst").read() + "\n" + \
                        open("CHANGES.txt").read(),
+    url = "http://pypi.python.org/pypi/isotoma.recipe.pound",
     classifiers = [
         "Framework :: Buildout",
         "Intended Audience :: System Administrators",

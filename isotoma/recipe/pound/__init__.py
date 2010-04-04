@@ -16,6 +16,7 @@ import logging
 import os
 import zc.buildout
 from Cheetah.Template import Template
+from isotoma.recipe import gocaptain
 
 try:
     from hashlib import sha1
@@ -36,18 +37,18 @@ class Pound(object):
         self.options = options
         self.buildout = buildout
         self.outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
-        self.pidfile = os.path.join(self.buildout['buildout']['var-directory'], "%s.pid" % self.name)
+        self.pidfile = os.path.join(self.buildout['buildout']['directory'], "var", "%s.pid" % self.name)
         self.cfgfile = os.path.join(self.outputdir, "pound.cfg")
-        self.options.setdefault('control', os.path.join(self.buildout['buildout']['var-directory'], "%s.ctl" % self.name))
+        self.options.setdefault('control', os.path.join(self.buildout['buildout']['directory'], "var", "%s.ctl" % self.name))
         self.options.setdefault('executable', '/usr/sbin/pound')
         self.options.setdefault('user', 'www-data')
         self.options.setdefault('group', 'www-data')
         self.options.setdefault('logfacility', 'local0')
-        self.options.setdefault('loglevel', 2)
-        self.options.setdefault('alive', 30)
-        self.options.setdefault('timeout', 60)
-        self.options.setdefault('xHTTP', 0)
-        self.options.setdefault('template', sibpath("pound.cfg")
+        self.options.setdefault('loglevel', "2")
+        self.options.setdefault('alive', "30")
+        self.options.setdefault('timeout', "60")
+        self.options.setdefault('xHTTP', "0")
+        self.options.setdefault('template', sibpath("pound.cfg"))
         self.options["__hashes_template"] = sha1(open(self.options["template"]).read()).hexdigest()
 
     def install(self):
@@ -63,15 +64,15 @@ class Pound(object):
         vars['backends'] = []
         for l in self.options['backends'].split("\n"):
             l = l.strip()
-            if l: vars['backends'].append(dict(zip['address', 'port'], l.split(":", 1)))
-        if not os.path.exists(outputdir):
-            os.mkdir(outputdir)
+            if l: vars['backends'].append(dict(zip(['address', 'port'], l.split(":", 1))))
+        if not os.path.exists(self.outputdir):
+            os.mkdir(self.outputdir)
         template = open(self.template).read()
         c = Template(template, searchList = vars)
         open(self.cfgfile, 'w').write(str(c))
         self.runscript()
         self.options.created(self.outputdir)
-        return self.options.created
+        return self.options.created()
         
     def runscript(self):
         target=os.path.join(self.buildout["buildout"]["bin-directory"],self.name)
@@ -83,7 +84,6 @@ class Pound(object):
             pidfile=self.pidfile, 
             name=self.name, 
             description="%s daemon" % self.name)
-        f.close()
         os.chmod(target, 0755)
         self.options.created(target)
         
