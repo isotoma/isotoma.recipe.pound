@@ -18,7 +18,7 @@ An example of a standard setup::
     recipe = isotoma.recipe.pound
     address = 127.0.0.1
     port = 8080
-    session = COOKIE:3600:_ZopeID
+    session = COOKIE:_ZopeID:3600
     err500 = /var/www/emergency/index.html
     emergency = 127.0.0.1:8090
     backends = 
