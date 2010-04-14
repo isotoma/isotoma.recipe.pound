@@ -58,7 +58,8 @@ class Pound(object):
         for always in 'user', 'group', 'logfacility', 'loglevel', 'alive', 'timeout', 'address', 'port', 'xHTTP', 'control':
             vars[always] = self.options[always]
         if 'session' in self.options:
-            vars['session'] = dict(zip(['type', 'id', 'ttl'], self.options['session'].split(":", 2)))
+            # session seems to be restricted in Cheetah
+            vars['affinity'] = dict(zip(['type', 'id', 'ttl'], self.options['session'].split(":", 2)))
         if 'emergency' in self.options:
             vars['emergency'] = dict(zip(['address', 'port'], self.options['emergency'].split(":", 1)))
         vars['backends'] = []
