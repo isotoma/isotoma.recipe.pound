@@ -16,6 +16,7 @@ import logging
 import os
 import zc.buildout
 import shutil
+import codecs
 from Cheetah.Template import Template
 
 class Interface(object):
@@ -50,9 +51,9 @@ class Emergency(object):
             shutil.rmtree(htdocs)
         shutil.copytree(self.options['path'], htdocs)
         for file in self.options["substitute"].strip().split():
-            tpt = open(os.path.join(self.options['path'], file)).read()
+            tpt = codecs.open(os.path.join(self.options['path'], file), "r", "utf-8").read()
             t = Template(tpt, searchList={'baseurl': self.options['public']})
-            open(os.path.join(htdocs, file), "w").write(str(t))
+            codecs.open(os.path.join(htdocs, file), "w", "utf-8").write(unicode(t))
         vars = self.options.copy()
         vars.update({
             'listen': self.options['listen'] == 'yes',
