@@ -41,6 +41,7 @@ class Pound(object):
         self.cfgfile = os.path.join(self.outputdir, "pound.cfg")
         self.options.setdefault('control', os.path.join(self.buildout['buildout']['directory'], "var", "%s.ctl" % self.name))
         self.options.setdefault('executable', '/usr/sbin/pound')
+        self.options.setdefault('poundctl', '/usr/sbin/poundctl')
         self.options.setdefault('user', 'www-data')
         self.options.setdefault('group', 'www-data')
         self.options.setdefault('logfacility', 'local0')
@@ -73,6 +74,10 @@ class Pound(object):
         open(self.cfgfile, 'w').write(str(c))
         self.runscript()
         self.options.created(self.outputdir)
+        target = os.path.join(self.buildout["buildout"]["bin-directory"],self.name + "ctl")
+        poundctl = open(target, "w")
+        print >> poundctl, "#!/bin/sh"
+        print >> poundctl, "%s -c %s $*" % (self.options['poundctl'], self.options['control'])
         return self.options.created()
         
     def runscript(self):

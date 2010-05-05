@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.0.14'
+version = '0.0.15'
 
 setup(
     name = 'isotoma.recipe.pound',
@@ -37,6 +37,7 @@ setup(
         "zc.buildout": [
             "default = isotoma.recipe.pound:Pound",
             "emergency = isotoma.recipe.pound.emergency:Emergency",
+            "cycle = isotoma.recipe.pound.cycle:Cycle",
         ],
     }
 )
