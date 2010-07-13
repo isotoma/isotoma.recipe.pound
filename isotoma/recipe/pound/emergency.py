@@ -41,6 +41,7 @@ class Emergency(object):
         self.options.setdefault('error_log', os.path.join(outputdir, "error.log"))
         self.options.setdefault('template', os.path.join(os.path.dirname(__file__), "apache.conf"))
         self.options.setdefault('listen', 'no')
+        self.options.setdefault('namevirtualhost', self.options['listen'])
 
     def install(self):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
@@ -57,6 +58,7 @@ class Emergency(object):
         vars = self.options.copy()
         vars.update({
             'listen': self.options['listen'] == 'yes',
+            'namevirtualhost': self.options['namevirtualhost'] == 'yes',
             'interfaces': [Interface(*x.split(":")) for x in self.options['interfaces'].strip().split()],
         })
         t = Template(open(self.options['template']).read(), searchList=vars)
