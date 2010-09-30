@@ -21,10 +21,11 @@ from Cheetah.Template import Template
 
 class Interface(object):
 
-    def __init__(self, interface, servername, port):
+    def __init__(self, interface, servername, port, ssl = None):
         self.interface = interface
         self.servername = servername
         self.port = port
+        self.ssl = ssl
 
 class Emergency(object):
 
@@ -42,6 +43,7 @@ class Emergency(object):
         self.options.setdefault('template', os.path.join(os.path.dirname(__file__), "apache.conf"))
         self.options.setdefault('listen', 'no')
         self.options.setdefault('namevirtualhost', self.options['listen'])
+        self.options.setdefault('sslca', '')
 
     def install(self):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
