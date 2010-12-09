@@ -45,6 +45,11 @@ class Emergency(object):
         self.options.setdefault('namevirtualhost', self.options['listen'])
         self.options.setdefault('sslca', '')
 
+        if self.options.get("enhanced-privacy", None):
+            options.setdefault("logformat", '"0.0.0.0 %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-agent}i\\""')
+        else:
+            options.setdefault("logformat", "Combined")
+
     def install(self):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
         htdocs = self.options['htdocs']
