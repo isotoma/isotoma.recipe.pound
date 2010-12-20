@@ -78,6 +78,9 @@ class Pound(object):
         poundctl = open(target, "w")
         print >> poundctl, "#!/bin/sh"
         print >> poundctl, "%s -c %s $*" % (self.options['poundctl'], self.options['control'])
+        poundctl.close()
+        os.chmod(target, 0755)
+        self.options.created(target)
         return self.options.created()
         
     def runscript(self):
