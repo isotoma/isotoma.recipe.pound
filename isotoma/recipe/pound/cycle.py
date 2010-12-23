@@ -20,6 +20,8 @@ import zc.buildout
 import shutil
 import ConfigParser
 
+from zc.buildout import easy_install
+
 class Cycle(object):
 
     def __init__(self, buildout, name, options):
@@ -34,8 +36,9 @@ class Cycle(object):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
         if not os.path.exists(outputdir):
             os.mkdir(outputdir)
-        ininame = os.path.join(outputdir, "cycle.ini")
-        ini = open(ininame, "w")
+
+        self.ininame = os.path.join(outputdir, "cycle.ini")
+        ini = open(self.ininame, "w")
         print >>ini, "[cycle]"
         print >>ini, "grace = %s" % (self.options['grace'],)
         print >>ini, "control = %s" % (self.options['control'],)
@@ -47,12 +50,16 @@ class Cycle(object):
         return [outputdir]
 
     def make_wrapper(self):
-        target=os.path.join(self.buildout["buildout"]["bin-directory"],self.name)
-        script = open(target, "w")
-        print >>script, "#! /usr/bin/env %s" % self.buildout['buildout']['executable']
-        print >>script, "from isotoma.recipe.pound import cycle"
-        print >>script, "cycle.execute('%s')" % (ininame,)
-        os.chmod(target, 0755)
+        path = self.buildout["buildout"]["bin-directory"]
+        egg_paths = [
+            self.buildout["buildout"]["develop-eggs-directory"],
+            self.buildout["buildout"]["eggs-directory"],
+            ]
+        arguments = "'%s'" % self.ininame
+
+        ws = easy_install.working_set(["isotoma.recipe.pound"], sys.executable, egg_paths)
+        easy_install.scripts([(self.name, "isotoma.recipe.pound.cycle", "execute")], ws, sys.executable, path, arguments=arguments)
+        self.options.created(os.path.join(path, self.name))
 
     def update(self):
         pass    
