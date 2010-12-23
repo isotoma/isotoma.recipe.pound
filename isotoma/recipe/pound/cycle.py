@@ -36,6 +36,7 @@ class Cycle(object):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
         if not os.path.exists(outputdir):
             os.mkdir(outputdir)
+        self.options.created(outputdir)
 
         self.ininame = os.path.join(outputdir, "cycle.ini")
         ini = open(self.ininame, "w")
@@ -47,7 +48,7 @@ class Cycle(object):
 
         self.make_wrapper()
 
-        return [outputdir]
+        return self.options.created()
 
     def make_wrapper(self):
         path = self.buildout["buildout"]["bin-directory"]
