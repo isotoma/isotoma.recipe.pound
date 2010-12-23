@@ -41,13 +41,18 @@ class Cycle(object):
         print >>ini, "control = %s" % (self.options['control'],)
         print >>ini, "poundctl = %s" % (self.options['poundctl'],)
         print >>ini, "backends = %s" % "\n    ".join(self.options['backends'].split("\n"))
+
+        self.make_wrapper()
+
+        return [outputdir]
+
+    def make_wrapper(self):
         target=os.path.join(self.buildout["buildout"]["bin-directory"],self.name)
         script = open(target, "w")
         print >>script, "#! /usr/bin/env %s" % self.buildout['buildout']['executable']
         print >>script, "from isotoma.recipe.pound import cycle"
         print >>script, "cycle.execute('%s')" % (ininame,)
         os.chmod(target, 0755)
-        return [outputdir]
 
     def update(self):
         pass    
