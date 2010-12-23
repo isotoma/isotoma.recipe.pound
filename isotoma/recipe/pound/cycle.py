@@ -33,7 +33,7 @@ class Cycle(object):
         self.options.setdefault('poundctl', "/usr/sbin/poundctl")
 
     def install(self):
-        outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
+        outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
         if not os.path.exists(outputdir):
             os.mkdir(outputdir)
         self.options.created(outputdir)
