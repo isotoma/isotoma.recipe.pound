@@ -39,19 +39,21 @@ address
 port
     The port on which to listen for connections
 backends
-    A list of backends, supplied as `address:port` pairs, separated by whitespace
+    A list of backends, supplied as ``address:port`` pairs, separated by whitespace
 
 Optional parameters
 -------------------
 
 executable
-    The path to the pound binary.  Defaults to `/usr/sbin/pound`.
+    The path to the pound binary.  Defaults to ``/usr/sbin/pound``.
+poundctl
+    The path to the poundctl binary.  Defaults to ``/usr/sbin/poundctl``.
 user
-    The user to run pound as.  Defaults to www-data.
+    The user to run pound as.  Defaults to ``www-data``.
 group
-    The group to run pound as.  Defaults to www-data.
+    The group to run pound as.  Defaults to ``www-data``.
 logfacility
-    The syslog facility to which to send log output.  Defaults to 'local0'.
+    The syslog facility to which to send log output.  Defaults to ``local0``.
 loglevel
     The logging level.  Defaults to '2'.
 alive
@@ -63,9 +65,9 @@ xHTTP
 template
     The full path to the configuration file template, if you want to customise further.  Defaults to pound.cfg template in this package.
 session
-    If you wish to have session affinity, provide the configuration here as `type:id:TTL`.
+    If you wish to have session affinity, provide the configuration here as ``type:id:TTL``.
 emergency
-    If you use an emergency server, provide the configuration here as `address:port`.
+    If you use an emergency server, provide the configuration here as ``address:port``.
 err500
     If you wish to provide an error 500 page, provide the full path here.
 
@@ -84,12 +86,12 @@ directive as well.
 
 To use this, you should first create a directory containing an index.html page,
 and whatever resources are needed to serve this page from apache.  In the
-template, refer to all resouces using `$baseurl` for example if we have::
+template, refer to all resouces using ``$baseurl``. For example, if we have::
 
     htdocs/index.html
     htdocs/images/logo.png
 
-Then in `index.html` put::
+then in `index.html` put::
 
     <html>
         <body>
@@ -111,10 +113,10 @@ Then provide a recipe like::
     error_log = /var/log/apache2/help.help.error.log
     substitute = index.html
 
-`$baseurl` will be replaced with the value of public.
+``$baseurl`` will be replaced with the value of public.
 
 This might seem like an overly convoluted way of setting up something
 relatively simple, but if you want valid and testable configurations in
-continuous integration, staging and production environments this is worth the
-effort.
+continuous integration, staging and production environments this is worth
+the effort.
 
