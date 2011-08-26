@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.5 (unreleased)
+0.1.5 (2011-08-26)
 ------------------
 
  - If there is a ${buildout:run-directory}, put pid file in there
