@@ -37,7 +37,12 @@ class Pound(object):
         self.options = options
         self.buildout = buildout
         self.outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
-        self.pidfile = os.path.join(self.buildout['buildout']['directory'], "var", "%s.pid" % self.name)
+
+        if 'run-directory' in self.buildout['buildout']:
+            self.pidfile = os.path.join(self.buildout['buildout']['run-directory'], "%s.pid" % self.name)
+        else:
+            self.pidfile = os.path.join(self.buildout['buildout']['directory'], "var", "%s.pid" % self.name)
+
         self.cfgfile = os.path.join(self.outputdir, "pound.cfg")
         self.options.setdefault('control', os.path.join(self.buildout['buildout']['directory'], "var", "%s.ctl" % self.name))
         self.options.setdefault('executable', '/usr/sbin/pound')
