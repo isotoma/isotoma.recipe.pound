@@ -11,8 +11,8 @@ class PackageInstaller:
         buildout = self.original.buildout
         python = buildout['buildout']['python']
         executable = buildout[python]['executable']
-        if 'find-links' in buildout:
-            links = buildout['find-links'].split()
+        if 'find-links' in buildout['buildout']:
+            links = buildout['buildout']['find-links'].split()
         else:
             links = ()
         index = buildout.get('index', None)
