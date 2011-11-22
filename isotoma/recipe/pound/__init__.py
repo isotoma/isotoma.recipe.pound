@@ -18,6 +18,10 @@ import zc.buildout
 from Cheetah.Template import Template
 from isotoma.recipe import gocaptain
 
+import wingdbstub
+
+from util import PackageInstaller
+
 try:
     from hashlib import sha1
 except ImportError:
@@ -68,6 +72,9 @@ class Pound(object):
             vars['affinity'] = dict(zip(['type', 'id', 'ttl'], self.options['session'].split(":", 2)))
         if 'emergency' in self.options:
             vars['emergency'] = dict(zip(['address', 'port'], self.options['emergency'].split(":", 1)))
+        if 'err500' in self.options:
+            packager = PackageInstaller(self)
+            vars['err500'] = packager.package_path(self.options['err500'])
         vars['backends'] = []
         for l in self.options['backends'].split("\n"):
             l = l.strip()

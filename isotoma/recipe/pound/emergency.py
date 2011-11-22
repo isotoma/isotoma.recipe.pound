@@ -18,6 +18,9 @@ import zc.buildout
 import shutil
 import codecs
 from Cheetah.Template import Template
+from zc.buildout import easy_install
+
+from util import PackageInstaller
 
 class Interface(object):
 
@@ -49,7 +52,7 @@ class Emergency(object):
             options.setdefault("logformat", '"0.0.0.0 %l %u %t \\"%r\\" %>s %b \\"%{Referer}i\\" \\"%{User-agent}i\\""')
         else:
             options.setdefault("logformat", "Combined")
-
+            
     def install(self):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
         htdocs = self.options['htdocs']
@@ -57,6 +60,8 @@ class Emergency(object):
             os.mkdir(outputdir)
         if os.path.exists(htdocs):
             shutil.rmtree(htdocs)
+        packager = PackageInstaller(self)
+        self.options['path'] = packager.package_path(self.options['path'])
         shutil.copytree(self.options['path'], htdocs)
         for file in self.options["substitute"].strip().split():
             tpt = codecs.open(os.path.join(self.options['path'], file), "r", "utf-8").read()
