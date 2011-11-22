@@ -1,4 +1,3 @@
-import wingdbstub
 import os
 from zc.buildout import easy_install
 

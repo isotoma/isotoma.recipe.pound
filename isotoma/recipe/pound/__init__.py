@@ -18,8 +18,6 @@ import zc.buildout
 from Cheetah.Template import Template
 from isotoma.recipe import gocaptain
 
-import wingdbstub
-
 from util import PackageInstaller
 
 try:
