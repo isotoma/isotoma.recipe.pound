@@ -40,10 +40,11 @@ class Pound(object):
         self.buildout = buildout
         self.outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
 
-        if 'run-directory' in self.buildout['buildout']:
-            self.pidfile = os.path.join(self.buildout['buildout']['run-directory'], "%s.pid" % self.name)
-        else:
-            self.pidfile = os.path.join(self.buildout['buildout']['directory'], "var", "%s.pid" % self.name)
+        if not "pidfile" in self.buildout:
+            if 'run-directory' in self.buildout['buildout']:
+                self.options["pidfile"] = os.path.join(self.buildout['buildout']['run-directory'], "%s.pid" % self.name)
+            else:
+                self.options["pidfile"] = os.path.join(self.buildout['buildout']['directory'], "var", "%s.pid" % self.name)
 
         self.cfgfile = os.path.join(self.outputdir, "pound.cfg")
         self.options.setdefault('control', os.path.join(self.buildout['buildout']['directory'], "var", "%s.ctl" % self.name))
@@ -95,12 +96,12 @@ class Pound(object):
         
     def runscript(self):
         target=os.path.join(self.buildout["buildout"]["bin-directory"],self.name)
-        args = '-f "%s" -p "%s"' % (self.cfgfile, self.pidfile)
+        args = '-f "%s" -p "%s"' % (self.cfgfile, self.options["pidfile"])
         gc = gocaptain.Automatic()
         gc.write(open(target, "wt"), 
             daemon=self.options['executable'], 
             args=args, 
-            pidfile=self.pidfile, 
+            pidfile=self.options["pidfile"], 
             name=self.name, 
             description="%s daemon" % self.name)
         os.chmod(target, 0755)

@@ -4,7 +4,7 @@ Changelog
 0.1.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+ - Better handling of migrations to ${buildout:run-directory}
 
 
 0.1.5 (2011-08-26)
