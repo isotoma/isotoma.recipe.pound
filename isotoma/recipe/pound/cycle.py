@@ -59,38 +59,10 @@ class Cycle(object):
         arguments = "'%s'" % self.ininame
 
         ws = easy_install.working_set(["isotoma.recipe.pound"], sys.executable, egg_paths)
-        easy_install.scripts([(self.name, "isotoma.recipe.pound.cycle", "execute")], ws, sys.executable, path, arguments=arguments)
+        easy_install.scripts([(self.name, "isotoma.recipe.pound.cyclescript", "execute")], ws, sys.executable, path, arguments=arguments)
         self.options.created(os.path.join(path, self.name))
 
     def update(self):
-        pass    
+        pass
 
-def execute(inifile):
-    cfg = ConfigParser.ConfigParser()
-    cfg.read(inifile)
-    grace = cfg.getint("cycle", "grace")
-    control = cfg.get("cycle", "control")
-    poundctl = cfg.get("cycle", "poundctl")
-    backends = cfg.get("cycle", "backends")
-    backends = [x.strip().split(":") for x in backends.strip().split("\n")]
-    # if the start/stop scripts do not start with / we assume they are alongside argv[0]
-    prefix = os.path.dirname(sys.argv[0])
-    for i, (stop, start) in enumerate(backends):
-        if not start.startswith("/"):
-            start = os.path.join(prefix, start)
-        if not stop.startswith("/"):
-            stop = os.path.join(prefix, stop)
-        s = "%s -c %s -b 0 0 %d" % (poundctl, control, i)
-        print s
-        os.system(s)
-        print "sleep", grace
-        time.sleep(grace)
-        print stop
-        os.system(stop)
-        print start
-        os.system(start)
-        s = "poundctl -c %s -B 0 0 %d" % (control, i)
-        print s
-        os.system(s)
-        
-        
+

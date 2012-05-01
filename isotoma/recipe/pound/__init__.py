@@ -40,7 +40,7 @@ class Pound(object):
         self.buildout = buildout
         self.outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
 
-        if not "pidfile" in self.buildout:
+        if not "pidfile" in self.options:
             if 'run-directory' in self.buildout['buildout']:
                 self.options["pidfile"] = os.path.join(self.buildout['buildout']['run-directory'], "%s.pid" % self.name)
             else:

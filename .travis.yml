@@ -1,8 +1,16 @@
 language: python
 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y -q pound
+
 install:
   - python bootstrap.py
   - ./bin/buildout
 
-script: ./bin/test
+script:
+  - ./bin/test
+  - sudo ./bin/pound start
+  - sudo ./bin/cycle
+  - sudo ./bin/pound stop
 
