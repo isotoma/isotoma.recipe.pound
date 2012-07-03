@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.1.8 (unreleased)
+0.1.8 (2012-07-03)
 ------------------
 
-- Nothing changed yet.
+- No changes - release to fix version sync weirdness?
 
 
 0.1.7 (2012-07-03)
