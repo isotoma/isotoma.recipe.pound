@@ -4,7 +4,7 @@ Changelog
 0.1.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Restore python2.4 compatibility
 
 
 0.1.6 (2012-02-03)

@@ -35,13 +35,14 @@ def convert_ip(data):
     return ":".join((ip(host), dec(port)))
 
 def iter_tcp_connection_lines():
-    with open("/proc/net/tcp", "r") as f:
-        f.readline()
-        while True:
-            line = f.readline()
-            if not line:
-                break
-            yield line
+    f = open("/proc/net/tcp", "r")
+    f.readline()
+    while True:
+        line = f.readline()
+        if not line:
+            break
+        yield line
+    f.close()
 
 def iter_connections():
     for line in iter_tcp_connection_lines():
