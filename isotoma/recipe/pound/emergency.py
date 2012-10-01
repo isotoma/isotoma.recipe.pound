@@ -22,6 +22,10 @@ from zc.buildout import easy_install
 
 from util import PackageInstaller
 
+def sibpath(filename):
+    return os.path.join(os.path.dirname(__file__), filename)
+
+
 class Interface(object):
 
     def __init__(self, interface, servername, port, ssl = None):
@@ -39,7 +43,7 @@ class Emergency(object):
         outputdir = os.path.join(self.buildout['buildout']['directory'], self.name)
         htdocs = os.path.join(outputdir, 'htdocs')
         self.options.setdefault('htdocs', htdocs)
-        self.options.setdefault('path', 'emergency')
+        self.options.setdefault('path', sibpath('htdocs'))
         self.options.setdefault('output', os.path.join(outputdir, "apache.conf"))
         self.options.setdefault('access_log', os.path.join(outputdir, "access.log"))
         self.options.setdefault('error_log', os.path.join(outputdir, "error.log"))
