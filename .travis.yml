@@ -1,7 +1,7 @@
 language: python
 
 env:
-  - PYTHON=python2.4 BUILDOUT=1.6.4
+  - PYTHON=python2.4 BUILDOUT=1.6.3
   - PYTHON=python2.6 BUILDOUT=1.4.3
 
 before_install:
