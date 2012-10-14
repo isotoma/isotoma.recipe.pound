@@ -19,6 +19,7 @@ from Cheetah.Template import Template
 from isotoma.recipe import gocaptain
 
 from util import PackageInstaller
+import missingbits
 
 try:
     from hashlib import sha1

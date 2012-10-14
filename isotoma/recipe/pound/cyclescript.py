@@ -19,81 +19,72 @@ import shutil
 import ConfigParser
 import xml.dom.minidom
 import subprocess
-from isotoma.recipe.pound.netstat import wait_for_backend
+
+from isotoma.recipe.pound.backend import Backend
+
+class PoundBackend(Backend):
+
+    def __init__(self, cfg, idx, listen, start_script, stop_script):
+        self.grace = cfg.getint("cycle", "grace")
+        self.control = cfg.get("cycle", "control")
+        self.poundctl = cfg.get("cycle", "poundctl")
+        self.wakeup = [x.strip() for x in cfg.get("cycle", "wakeup").strip().split("\n") if x.strip()] 
+        self.idx = idx
+
+        Backend.__init__(self, listen, start_script, stop_script)
+
+    def enable(self):
+        s = "%s -c %s -B 0 0 %d" % (self.poundctl, self.control, self.idx)
+        self.msg(s)
+        os.system(s)
+
+    def disable(self):
+        s = "%s -c %s -b 0 0 %d" % (self.poundctl, self.control, self.idx)
+        self.msg(s)
+        os.system(s)
 
 
-class WaitForBackend(object):
-    def __init__(self, backend):
-        self.backend = backend
-    def __call__(self):
-        print "waiting for connections to %s to terminate" % self.backend
-        wait_for_backend(self.backend)
+def iter_backends(cfg):
+    control = cfg.get("cycle", "control")
+    backends = cfg.get("cycle", "backends")
+    backends = [x.strip().split(":") for x in backends.strip().split("\n")]
 
-
-class WaitForTimeout(object):
-    def __init__(self, grace):
-        self.grace = grace
-    def __call__(self):
-        print "sleeping for", self.grace
-        time.sleep(self.grace)
-
-
-def get_waiters(control):
     p = subprocess.Popen(["poundctl", "-c", control, "-X"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
 
     if stderr:
-        return {}
+        return
 
     # Oh pound / XML, one or both of you suck...
     stdout = stdout.replace("HTTP address", "HTTP='1' address")
 
     dom = xml.dom.minidom.parseString(stdout)
     for listener in dom.getElementsByTagName("listener"):
-        if listener.getAttribute("index") == "0":
-            retval = {}
-            for backend in listener.getElementsByTagName("backend"):
-                retval[int(backend.getAttribute("index"))] = WaitForBackend(backend.getAttribute("address"))
-            return retval
+        if listener.getAttribute("index") != "0":
+            continue
 
-    return {}
+        for backend in listener.getElementsByTagName("backend"):
+            idx = int(backend.getAttribute("index"))
+            stop_script, start_script = backends[idx]
+
+            prefix = os.path.dirname(sys.argv[0])
+            if not start_script.startswith("/"):
+                start_script = os.path.join(prefix, start_script)
+            if not stop_script.startswith("/"):
+                stop_script = os.path.join(prefix, stop_script)
+
+            yield PoundBackend(cfg,
+                idx,
+                backend.getAttribute("address"),
+                start_script,
+                stop_script,
+                )
 
 
 def execute(inifile):
     cfg = ConfigParser.ConfigParser()
     cfg.read(inifile)
-    grace = cfg.getint("cycle", "grace")
-    control = cfg.get("cycle", "control")
-    poundctl = cfg.get("cycle", "poundctl")
-    backends = cfg.get("cycle", "backends")
-    backends = [x.strip().split(":") for x in backends.strip().split("\n")]
 
-    grace = WaitForTimeout(grace)
-    waiters = get_waiters(control)
-
-    # if the start/stop scripts do not start with / we assume they are alongside argv[0]
-    prefix = os.path.dirname(sys.argv[0])
-    for i, (stop, start) in enumerate(backends):
-        if not start.startswith("/"):
-            start = os.path.join(prefix, start)
-        if not stop.startswith("/"):
-            stop = os.path.join(prefix, stop)
-
-        s = "%s -c %s -b 0 0 %d" % (poundctl, control, i)
-        print s
-        os.system(s)
-
-        waiters.get(i, grace)()
-
-        print stop
-        os.system(stop)
-
-        print start
-        os.system(start)
-
-        s = "poundctl -c %s -B 0 0 %d" % (control, i)
-        print s
-        os.system(s)
-
-        grace()
+    for b in iter_backends(cfg):
+        b.cycle()
 
