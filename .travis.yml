@@ -11,6 +11,5 @@ install:
 script:
   - ./bin/test
   - sudo ./bin/pound start
-  - sudo ./bin/cycle
   - sudo ./bin/pound stop
 

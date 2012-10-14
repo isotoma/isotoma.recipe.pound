@@ -4,7 +4,10 @@ Changelog
 0.1.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Refactor resuable cycle logic into a Backend class.
+
+- Ensure the listen address is in correct state before moving onto next
+  backend.
 
 
 0.1.9 (2012-10-01)
