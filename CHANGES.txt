@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.10 (unreleased)
+0.1.10 (2012-10-14)
 -------------------
 
 - Refactor resuable cycle logic into a Backend class.
