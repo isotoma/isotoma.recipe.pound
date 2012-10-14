@@ -28,7 +28,7 @@ class PoundBackend(Backend):
         self.grace = cfg.getint("cycle", "grace")
         self.control = cfg.get("cycle", "control")
         self.poundctl = cfg.get("cycle", "poundctl")
-        
+        self.wakeup = [x.strip() for x in cfg.get("cycle", "wakeup").strip().split("\n") if x.strip()] 
         self.idx = idx
 
         Backend.__init__(self, listen, start_script, stop_script)

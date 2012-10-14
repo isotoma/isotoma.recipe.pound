@@ -31,6 +31,7 @@ class Cycle(object):
         self.options.setdefault("grace", "30")
         self.options.setdefault('control', os.path.join(self.buildout['buildout']['directory'], "var", "%s.ctl" % self.name))
         self.options.setdefault('poundctl', "/usr/sbin/poundctl")
+        self.options.setdefault('wakeup', '')
 
     def install(self):
         outputdir = os.path.join(self.buildout['buildout']['parts-directory'], self.name)
@@ -44,7 +45,8 @@ class Cycle(object):
         print >>ini, "grace = %s" % (self.options['grace'],)
         print >>ini, "control = %s" % (self.options['control'],)
         print >>ini, "poundctl = %s" % (self.options['poundctl'],)
-        print >>ini, "backends = %s" % "\n    ".join(self.options['backends'].split("\n"))
+        print >>ini, "backends = %s" % "\n    ".join(self.options.get_list('backends'))
+        print >>ini, "wakeup = %s" % "\n    ".join(self.options.get_list('wakeup'))
 
         self.make_wrapper()
 

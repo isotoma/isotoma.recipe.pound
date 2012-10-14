@@ -32,6 +32,7 @@ setup(
         'zc.buildout',
         'Cheetah',
         'isotoma.recipe.gocaptain',
+        'missingbits >= 0.0.14',
     ],
     entry_points = {
         "zc.buildout": [

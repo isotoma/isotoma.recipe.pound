@@ -15,6 +15,7 @@
 import time
 import os
 import sys
+import urllib2
 
 CONNECTION_STATE = {
     '01':'ESTABLISHED',
@@ -115,10 +116,20 @@ class Backend(object):
             time.sleep(1)
 
     def wake(self):
-        return
-        fp = urllib2.urlopen(self.wake_url)
-        fp.read()
-        fp.close()
+        if not self.wakeup:
+            self.msg("Waiting grace period for warmup (%d seconds)" % self.grace)
+            return
+
+        self.msg("Hitting URL's to wake up backend")
+
+        for url_part in self.wakeup:
+            url = "http://%s/%s" % (self.listen, url_part.lstrip("/"))
+            try:
+                self.msg("  %s" % url)
+                fp = urllib2.urlopen(url)
+                fp.read()
+            except:
+                pass
 
     def start(self):
         self.msg(self.start_script)

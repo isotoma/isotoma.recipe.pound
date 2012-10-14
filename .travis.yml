@@ -11,5 +11,7 @@ install:
 script:
   - ./bin/test
   - sudo ./bin/pound start
+  - sudo ./bin/cycle
+  - sudo ./bin/cycle-nowakeup
   - sudo ./bin/pound stop
 

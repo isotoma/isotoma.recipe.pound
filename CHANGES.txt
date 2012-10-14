@@ -9,6 +9,8 @@ Changelog
 - Ensure the listen address is in correct state before moving onto next
   backend.
 
+- You can optionally poke URL's on the backend to ensure it has started.
+
 
 0.1.9 (2012-10-01)
 ------------------
