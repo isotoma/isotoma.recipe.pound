@@ -1,16 +1,16 @@
 language: python
 
 env:
-  - PYTHON=python2.4
-  - PYTHON=python2.6
+  - PYTHON=python2.4 BUILDOUT=1.6.4
+  - PYTHON=python2.6 BUILDOUT=1.4.3
 
 before_install:
   - sudo apt-get update
   - sudo apt-get install -y -q pound
 
 install:
-  - $PYTHON bootstrap.py
-  - ./bin/buildout
+  - $PYTHON bootstrap.py -v $BUILDOUT
+  - ./bin/buildout versions:zc.buildout=$BUILDOUT
 
 script:
   - ./bin/test
