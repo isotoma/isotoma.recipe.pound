@@ -17,7 +17,6 @@ import os
 import time
 import shutil
 import ConfigParser
-import xml.dom.minidom
 import subprocess
 
 from isotoma.recipe.pound.backend import Backend
@@ -45,40 +44,27 @@ class PoundBackend(Backend):
 
 
 def iter_backends(cfg):
-    control = cfg.get("cycle", "control")
+    prefix = os.path.dirname(sys.argv[0])
+
     backends = cfg.get("cycle", "backends")
     backends = [x.strip().split(":") for x in backends.strip().split("\n")]
 
-    p = subprocess.Popen(["poundctl", "-c", control, "-X"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
+    for idx, backend in enumerate(backends):
+        ip, port, stop_script, start_script = backends[idx]
+        address = ":".join((ip, port))
 
-    if stderr:
-        return
+        if not start_script.startswith("/"):
+            start_script = os.path.join(prefix, start_script)
 
-    # Oh pound / XML, one or both of you suck...
-    stdout = stdout.replace("HTTP address", "HTTP='1' address")
+        if not stop_script.startswith("/"):
+            stop_script = os.path.join(prefix, stop_script)
 
-    dom = xml.dom.minidom.parseString(stdout)
-    for listener in dom.getElementsByTagName("listener"):
-        if listener.getAttribute("index") != "0":
-            continue
-
-        for backend in listener.getElementsByTagName("backend"):
-            idx = int(backend.getAttribute("index"))
-            stop_script, start_script = backends[idx]
-
-            prefix = os.path.dirname(sys.argv[0])
-            if not start_script.startswith("/"):
-                start_script = os.path.join(prefix, start_script)
-            if not stop_script.startswith("/"):
-                stop_script = os.path.join(prefix, stop_script)
-
-            yield PoundBackend(cfg,
-                idx,
-                backend.getAttribute("address"),
-                start_script,
-                stop_script,
-                )
+        yield PoundBackend(cfg,
+            idx,
+            address,
+            start_script,
+            stop_script,
+            )
 
 
 def execute(inifile):

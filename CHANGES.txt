@@ -4,7 +4,8 @@ Changelog
 0.1.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Don't invoke poundctl when working out which backends to use. This avoids the
+  whole issue of crappy pound XML that python2.4 can't parse.
 
 
 0.1.10 (2012-10-14)
