@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.11 (unreleased)
+0.1.11 (2012-10-25)
 -------------------
 
 - Don't invoke poundctl when working out which backends to use. This avoids the
