@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.12 (unreleased)
+0.1.12 (2013-01-21)
 -------------------
 
 - Make sure the cycle script is run as run and only when there is a pound socket.
