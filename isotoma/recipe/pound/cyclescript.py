@@ -27,7 +27,7 @@ class PoundBackend(Backend):
         self.grace = cfg.getint("cycle", "grace")
         self.control = cfg.get("cycle", "control")
         self.poundctl = cfg.get("cycle", "poundctl")
-        self.wakeup = [x.strip() for x in cfg.get("cycle", "wakeup").strip().split("\n") if x.strip()] 
+        self.wakeup = [x.strip() for x in cfg.get("cycle", "wakeup").strip().split("\n") if x.strip()]
         self.idx = idx
 
         Backend.__init__(self, listen, start_script, stop_script)
@@ -70,6 +70,15 @@ def iter_backends(cfg):
 def execute(inifile):
     cfg = ConfigParser.ConfigParser()
     cfg.read(inifile)
+
+    if os.getuid() != 0:
+        print "This command must be run as root!"
+        sys.exit(1)
+
+    socket = cfg.get("cycle", "control")
+    if not os.path.exists(socket):
+        print "Cannot find pound socket at '%s'" % socket
+        print "Pound is not running or config is wrong"
 
     for b in iter_backends(cfg):
         b.cycle()
