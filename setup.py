@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.1.12'
+version = '0.1.13.dev0'
 
 setup(
     name = 'isotoma.recipe.pound',
