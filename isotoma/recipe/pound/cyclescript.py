@@ -79,6 +79,7 @@ def execute(inifile):
     if not os.path.exists(socket):
         print "Cannot find pound socket at '%s'" % socket
         print "Pound is not running or config is wrong"
+        sys.exit(1)
 
     for b in iter_backends(cfg):
         b.cycle()
