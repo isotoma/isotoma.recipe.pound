@@ -75,6 +75,9 @@ class Pound(object):
         if 'err500' in self.options:
             packager = PackageInstaller(self)
             vars['err500'] = packager.package_path(self.options['err500'])
+        if 'err503' in self.options:
+            packager = PackageInstaller(self)
+            vars['err503'] = packager.package_path(self.options['err503'])
         vars['backends'] = []
         for l in self.options['backends'].split("\n"):
             l = l.strip()
@@ -94,20 +97,20 @@ class Pound(object):
         os.chmod(target, 0755)
         self.options.created(target)
         return self.options.created()
-        
+
     def runscript(self):
         target=os.path.join(self.buildout["buildout"]["bin-directory"],self.name)
         args = '-f "%s" -p "%s"' % (self.cfgfile, self.options["pidfile"])
         gc = gocaptain.Automatic()
-        gc.write(open(target, "wt"), 
-            daemon=self.options['executable'], 
-            args=args, 
-            pidfile=self.options["pidfile"], 
-            name=self.name, 
+        gc.write(open(target, "wt"),
+            daemon=self.options['executable'],
+            args=args,
+            pidfile=self.options["pidfile"],
+            name=self.name,
             description="%s daemon" % self.name)
         os.chmod(target, 0755)
         self.options.created(target)
-        
+
     def update(self):
         pass
 

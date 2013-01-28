@@ -70,6 +70,8 @@ emergency
     If you use an emergency server, provide the configuration here as ``address:port``.
 err500
     If you wish to provide an error 500 page, provide the full path here.
+err503
+    If you wish to provide an error 503 page, provide the full path here.
 
 Emergency Servers
 -----------------
